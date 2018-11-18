@@ -24,6 +24,7 @@ function mostrarInstrucciones(instrucciones) {
     var i=0;
   for(i=0;i<instrucciones.length;i++){
      mostrarInstruccionEnLista(instrucciones[i],"lista-instrucciones");
+     console.log("muestra "+instrucciones[i]);
    }
 }
 
@@ -32,6 +33,7 @@ y utilice actualizarUltimoMovimiento para mostrarlo en pantalla */
 function agregaUltimoMovimiento(direccion){
    movimientos.push(direccion);
   actualizarUltimoMovimiento(direccion);
+  console.log("agregué a mov "+direccion);
 }
 
 
@@ -40,17 +42,13 @@ Existen diferentes formas de hacer este chequeo a partir de la grilla. */
 function chequearSiGano() {
   var i=0;
   var j=0;
+  var k=1;
   var gano=true;
-  var ganadora = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
-];
-  for(i=0;i<grilla.length;i++) 
+    for(i=0;i<grilla.length;i++) 
   {
     for(j=0;j<grilla[i].length;j++)
     { 
-      if(grilla[i][j]!=ganadora[i][j])
+      if(grilla[i][j]!=k++)
       {
         gano=false;
       }
@@ -79,26 +77,31 @@ Se te ocurre cómo solucionar esto con una variable temporal?
 */
 function intercambiarPosicionesGrilla(filaPos1, columnaPos1, filaPos2, columnaPos2) {
     var temp;
-    temp=grilla[filaPos1][columnaPos1];
-    grilla[filaPos1][columnaPos1]=grilla[filaPos2][columnaPos2];
-    grilla[filaPos2][columnaPos2]=temp;
+    temp=grilla[filaPos2][columnaPos2];
+    grilla[filaPos2][columnaPos2]=grilla[filaPos1][columnaPos1];
+    grilla[filaPos1][columnaPos1]=temp;
+
+    console.log("cambia"+ filaPos1+" "+columnaPos1+" "+filaPos2+" "+columnaPos2);
 }
 
 // Actualiza la posición de la pieza vacía
 function actualizarPosicionVacia(nuevaFila, nuevaColumna) {
     filaVacia=nuevaFila;
     columnaVacia=nuevaColumna;
+    console.log("nuevafilavacia "+nuevaFila,nuevaColumna);
 }
 
 
 // Para chequear si la posicón está dentro de la grilla.
 function posicionValida(fila, columna) {
-    if((fila<grilla.length) && (columna < grilla[0].length))
+    if((fila<grilla.length) && (fila>-1) && (columna>-1) && (columna < grilla[0].length))
         {
+          console.log("pos valida" + fila + columna);
           return true;
-        }
+          }
         else {
-              return false;
+        	 console.log("pos invalida" + fila + columna);
+             return false;
              }
 }
 
@@ -110,13 +113,13 @@ function moverEnDireccion(direccion) {
 
   // Mueve pieza hacia la abajo, reemplazandola con la blanca
   if (direccion === codigosDireccion.ABAJO) {
-    nuevaFilaPiezaVacia = filaVacia - 1;
+    nuevaFilaPiezaVacia = filaVacia+1;
     nuevaColumnaPiezaVacia = columnaVacia;
   }
     
   // Mueve pieza hacia arriba, reemplazandola con la blanca
   else if (direccion === codigosDireccion.ARRIBA) {
-    nuevaFilaPiezaVacia = filaVacia + 1;
+    nuevaFilaPiezaVacia = filaVacia-1;
     nuevaColumnaPiezaVacia = columnaVacia;
   }
     
@@ -139,7 +142,8 @@ function moverEnDireccion(direccion) {
     if (posicionValida(nuevaFilaPiezaVacia, nuevaColumnaPiezaVacia)) {
         intercambiarPosiciones(filaVacia, columnaVacia, nuevaFilaPiezaVacia, nuevaColumnaPiezaVacia);
         actualizarPosicionVacia(nuevaFilaPiezaVacia, nuevaColumnaPiezaVacia);
-        agregaUltimoMovimiento(direccion) //COMPLETAR: Agregar la dirección del movimiento al arreglo de movimientos
+        agregaUltimoMovimiento(direccion); 
+        //COMPLETAR: Agregar la dirección del movimiento al arreglo de movimientos
 
     }
 }
@@ -195,7 +199,7 @@ function intercambiarPosicionesDOM(idPieza1, idPieza2) {
 
   padre.replaceChild(clonElemento1, elementoPieza2);
   padre.replaceChild(clonElemento2, elementoPieza1);
-}
+ }
 
 /* Actualiza la representación visual del último movimiento 
 en la pantalla, representado con una flecha. */
@@ -278,7 +282,7 @@ y ejecutando la función para que se capturen las teclas que
 presiona el usuario */
 function iniciar() {
     mostrarInstrucciones(instrucciones);
-    mezclarPiezas(2);
+    mezclarPiezas(30);
     capturarTeclas();
 }
 

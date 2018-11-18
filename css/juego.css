@@ -5,10 +5,8 @@ body {
   margin: 5% auto;
   min-height: 100%;
   background-image: url(../images/adventure.jpg);
-
 }
 ul {
-
   padding-left: 0;
   list-style: none;
 }
@@ -39,7 +37,8 @@ li::before {
 }
 
 .col-60 {
-  background: #E84A5F;
+background: #E84A5F;
+
 }
 
 #flecha{
@@ -51,7 +50,6 @@ li::before {
 }
 
 #juego div {
-  
   text-align: center;
   animation: fadein 2s;
 
@@ -69,8 +67,7 @@ li::before {
   padding-left: 1%;
   padding-top: 1%;
   width: 32%;
-  height: 32%;
-}
+  }
 
 #objetivo img {
  width: 80%;
