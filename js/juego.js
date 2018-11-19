@@ -1,8 +1,8 @@
-// Arreglo que contiene las intrucciones del juego 
-var instrucciones = ["Mueve con flechas","busca la imagen","armar todo","muchas suerte"];
+// Arreglo que contiene las intrucciones del juego c
+var instrucciones = ["Mueve con flechas","busca la imagen","armar todo","muchas suerte","Presione ESC para volver a mezclar"];
 // Arreglo para ir guardando los movimientos que se vayan realizando
 var movimientos = [];
-
+var cuentateclas=0;
 // Representación de la grilla. Cada número representa a una pieza.
 // El 9 es la posición vacía
 var grilla = [
@@ -24,8 +24,13 @@ function mostrarInstrucciones(instrucciones) {
     var i=0;
   for(i=0;i<instrucciones.length;i++){
      mostrarInstruccionEnLista(instrucciones[i],"lista-instrucciones");
-     console.log("muestra "+instrucciones[i]);
-   }
+     }
+}
+
+function resetearMovimientos() { //resetea arreglo movimientos para usarlo como contador, 
+// se podría simplemente restar los cambios iniciales pero así es más glamoroso
+while(movimientos.length>0)
+	movimientos.pop();
 }
 
 /* COMPLETAR: Crear función que agregue la última dirección al arreglo de movimientos
@@ -33,7 +38,6 @@ y utilice actualizarUltimoMovimiento para mostrarlo en pantalla */
 function agregaUltimoMovimiento(direccion){
    movimientos.push(direccion);
   actualizarUltimoMovimiento(direccion);
-  console.log("agregué a mov "+direccion);
 }
 
 
@@ -62,7 +66,8 @@ return(gano);
 
 // Implementar alguna forma de mostrar un cartel que avise que ganaste el juego
 function mostrarCartelGanador() {
-    alert("Ganó!");
+    alert("Ganó!   "+cuentateclas);
+
 }
 
 /* Función que intercambia dos posiciones en la grilla.
@@ -80,15 +85,12 @@ function intercambiarPosicionesGrilla(filaPos1, columnaPos1, filaPos2, columnaPo
     temp=grilla[filaPos2][columnaPos2];
     grilla[filaPos2][columnaPos2]=grilla[filaPos1][columnaPos1];
     grilla[filaPos1][columnaPos1]=temp;
-
-    console.log("cambia"+ filaPos1+" "+columnaPos1+" "+filaPos2+" "+columnaPos2);
-}
+ }
 
 // Actualiza la posición de la pieza vacía
 function actualizarPosicionVacia(nuevaFila, nuevaColumna) {
     filaVacia=nuevaFila;
     columnaVacia=nuevaColumna;
-    console.log("nuevafilavacia "+nuevaFila,nuevaColumna);
 }
 
 
@@ -96,11 +98,9 @@ function actualizarPosicionVacia(nuevaFila, nuevaColumna) {
 function posicionValida(fila, columna) {
     if((fila<grilla.length) && (fila>-1) && (columna>-1) && (columna < grilla[0].length))
         {
-          console.log("pos valida" + fila + columna);
           return true;
           }
         else {
-        	 console.log("pos invalida" + fila + columna);
              return false;
              }
 }
@@ -143,7 +143,7 @@ function moverEnDireccion(direccion) {
         intercambiarPosiciones(filaVacia, columnaVacia, nuevaFilaPiezaVacia, nuevaColumnaPiezaVacia);
         actualizarPosicionVacia(nuevaFilaPiezaVacia, nuevaColumnaPiezaVacia);
         agregaUltimoMovimiento(direccion); 
-        //COMPLETAR: Agregar la dirección del movimiento al arreglo de movimientos
+        //COMPLETAR: ya está Agregar la dirección del movimiento al arreglo de movimientos
 
     }
 }
@@ -168,13 +168,15 @@ var codigosDireccion = {
     IZQUIERDA: 37,
     ARRIBA: 38,
     DERECHA: 39,
-    ABAJO: 40
+    ABAJO: 40,
+    ESC: 27,
 }
 
 /* Funcion que realiza el intercambio logico (en la grilla) y ademas actualiza
 el intercambio en la pantalla (DOM). Para que funcione debera estar implementada
 la funcion intercambiarPosicionesGrilla() */
 function intercambiarPosiciones(fila1, columna1, fila2, columna2) {
+	cuentateclas++;
   // Intercambio posiciones en la grilla
   var pieza1 = grilla[fila1][columna1];
   var pieza2 = grilla[fila2][columna2];
@@ -188,6 +190,7 @@ function intercambiarPosiciones(fila1, columna1, fila2, columna2) {
 las fichas en la pantalla */
 
 function intercambiarPosicionesDOM(idPieza1, idPieza2) {
+
   // Intercambio posiciones en el DOM
   var elementoPieza1 = document.getElementById(idPieza1);
   var elementoPieza2 = document.getElementById(idPieza2);
@@ -263,9 +266,7 @@ function capturarTeclas() {
       evento.which === codigosDireccion.ARRIBA ||
       evento.which === codigosDireccion.DERECHA ||
       evento.which === codigosDireccion.IZQUIERDA) {
-
       moverEnDireccion(evento.which);
-
         var gano = chequearSiGano();
         if (gano) {
           setTimeout(function() {
@@ -274,6 +275,11 @@ function capturarTeclas() {
             }
             evento.preventDefault();
         }
+        else if(evento.which === codigosDireccion.ESC)
+        	{ mezclarPiezas();
+        		console.log("aquí escape y mezclando");
+              resetearMovimientos();
+        	}
     })
 }
 
@@ -282,7 +288,8 @@ y ejecutando la función para que se capturen las teclas que
 presiona el usuario */
 function iniciar() {
     mostrarInstrucciones(instrucciones);
-    mezclarPiezas(30);
+    mezclarPiezas(5);
+    cuentateclas=0;
     capturarTeclas();
 }
 
